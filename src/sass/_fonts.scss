@@ -1,0 +1,84 @@
+/* noto-sans-regular - latin */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 400;
+  src: url("../fonts/noto-sans-v27-latin-regular.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("../fonts/noto-sans-v27-latin-regular.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("../fonts/noto-sans-v27-latin-regular.woff2")
+      format("woff2"),
+    /* Super Modern Browsers */ url("../fonts/noto-sans-v27-latin-regular.woff")
+      format("woff"),
+    /* Modern Browsers */ url("../fonts/noto-sans-v27-latin-regular.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("../fonts/noto-sans-v27-latin-regular.svg#NotoSans") format("svg"); /* Legacy iOS */
+}
+
+/* noto-sans-700 - latin */
+@font-face {
+  font-family: "Noto Sans";
+  font-style: normal;
+  font-weight: 700;
+  src: url("../fonts/noto-sans-v27-latin-700.eot"); /* IE9 Compat Modes */
+  src: local(""),
+    url("../fonts/noto-sans-v27-latin-700.eot?#iefix")
+      format("embedded-opentype"),
+    /* IE6-IE8 */ url("../fonts/noto-sans-v27-latin-700.woff2") format("woff2"),
+    /* Super Modern Browsers */ url("../fonts/noto-sans-v27-latin-700.woff")
+      format("woff"),
+    /* Modern Browsers */ url("../fonts/noto-sans-v27-latin-700.ttf")
+      format("truetype"),
+    /* Safari, Android, iOS */
+      url("../fonts/noto-sans-v27-latin-700.svg#NotoSans") format("svg"); /* Legacy iOS */
+}
+
+/* Ratio Scale */
+$type-ratios: (
+  "minorSecond": 1.067,
+  "majorSecond": 1.125,
+  "minorThird": 1.2,
+  "majorThird": 1.25,
+  "perfectFourth": 1.333,
+  "augmentedFourth": 1.414,
+  "perfectFifth": 1.5,
+  "goldenRatio": 1.618,
+);
+@function type-ratio($key) {
+  @return map-get($type-ratios, $key);
+}
+$type-base-size: 1rem;
+$type-size-ratio: type-ratio("minorThird");
+$type-levels: 4, 3, 2, 1;
+$type-styles: ();
+$level-size: $type-base-size;
+@each $level in $type-levels {
+  $level-size: $level-size * $type-size-ratio;
+  $type-styles: map-merge($type-styles, (#{"h"}$level: $level-size));
+
+  h#{$level},
+  .h#{$level} {
+    font-size: $level-size;
+    line-height: calc(2px + 2ex + 2px);
+    margin-bottom: 0.65em;
+
+    @if ($type-size-ratio > 1.2) {
+      $level-unitless: $level-size / ($level-size * 0 + 1);
+      $fluid-reduction: if($level-size > 4, 0.5, 0.33);
+      $fluid-min: $level-unitless - ($fluid-reduction * $level-unitless);
+      $fluid-min: if($fluid-min > $type-base-size, $fluid-min, 1);
+      $fluid-scaler: ($level-unitless - $fluid-min) + 4vw;
+
+      font-size: clamp(
+        #{$fluid-min}rem,
+        #{$fluid-scaler} + 1rem,
+        #{$level-size}
+      );
+    }
+  }
+}
+@function type-style($key) {
+  @return map-get($type-styles, $key);
+}
